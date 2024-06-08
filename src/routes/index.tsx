@@ -34,7 +34,7 @@ export default createBrowserRouter([
     },
     {
         path: "*",
-        element: <Navigate to="/" />,
+        element: <Navigate to="/test" />,
         errorElement: <PageNotFound />
     },
 ]);  

@@ -1,5 +1,5 @@
 import "./index.scss";
-import { Button, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Button, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import SaveIcon from '@mui/icons-material/Save';
