@@ -1,0 +1,33 @@
+.file-card{
+    background-color: #f0f4f9;
+    padding: 10px;
+    border-radius: 10px;
+    user-select: none;
+
+    .header {
+        display: flex;
+        align-items: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .title {
+            white-space: nowrap;
+            overflow: hidden;
+            margin-right: 5px;
+            font-size: 14px;
+            line-height: 10px;
+        }
+    }
+
+    .preview{
+        height: 200px;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+    &:hover{
+        background-color: #e5e5e5;
+
+    }
+}

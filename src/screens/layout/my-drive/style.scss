@@ -1,0 +1,13 @@
+
+
+.file-actions{
+    margin: 10px 0px;
+    padding: 4px 0px;
+
+    .active {
+        display: flex;
+        align-items: center;
+        background-color: #f0f4f9;
+        border-radius: 20px;
+    }
+}

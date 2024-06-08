@@ -1,0 +1,17 @@
+@import "./assets/css/variable/style.scss";
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.dark-icon{
+    fill: $black400 !important;
+}
