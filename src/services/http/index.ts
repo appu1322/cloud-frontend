@@ -1,5 +1,5 @@
 import useLoader from "../../hooks/useLoader";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosProgressEvent } from "axios";
 
 const HttpService = () => {
     const { setIsLoading } = useLoader();
@@ -47,7 +47,20 @@ const HttpService = () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${localStorage.getItem("currentUserToken") || ""}`
-                    }
+                    },
+                    onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                        if (progressEvent.total) {
+                            const progress = (progressEvent.loaded / progressEvent.total) * 50;
+                            console.log("uploaded: ", { progress });
+
+                        }
+                    },
+                    onDownloadProgress: (progressEvent) => {
+                        if (progressEvent.total) {
+                            const progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
+                            console.log("Download: ", { progress });
+                        }
+                    },
                 }
             )
 
