@@ -11,7 +11,6 @@ const CustomDropzone: FC<IProps> = ({ children, height }) => {
     noClick: true,
     onDrop: (acceptFiles) => {
       console.log({ acceptFiles });
-
     }
   })
 
@@ -21,7 +20,9 @@ const CustomDropzone: FC<IProps> = ({ children, height }) => {
       {
         isDragActive ?
           <div>Drop the files here ...</div> :
-          children
+          <div className='h-100' style={{overflow:"auto"}}>
+            {children}
+          </div>
       }
     </div>
   )

@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCard from "../../../components/content-card";
 import { useEffect, useState } from "react";
-import { useDropzone } from 'react-dropzone'
+import CustomDropzone from "../../../components/custom-dropzone";
 
 const data = [
     {
@@ -42,13 +42,6 @@ interface IState {
 }
 
 const MyDrive = () => {
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        noClick: true,
-        onDrop: (acceptFiles) => {
-            console.log({ acceptFiles });
-
-        }
-    })
     const [state, setState] = useState<IState>({
         selected: [],
         shiftPressing: false
@@ -107,30 +100,7 @@ const MyDrive = () => {
                 }
             </div>
 
-            <div {...getRootProps()} className="dropzone-wrapper">
-                <input {...getInputProps()} />
-                {
-                    isDragActive ?
-                        <div>Drop the files here ...</div> :
-                        // <p>Drag 'n' drop some files here, or click to select files</p>
-                        <Grid container spacing={2}>
-                        {
-                            data.map(ele => {
-                                return <ContentCard
-                                    key={ele.id}
-                                    id={ele.id}
-                                    logo={ele.logo}
-                                    title={ele.title}
-                                    active={state.selected.includes(ele.id)}
-                                    onClick={onSelect}
-                                />
-                            })
-                        }
-                    </Grid>
-                }
-            </div>
-
-            {/* <div>
+            <CustomDropzone height="calc(100% - 113px)">
                 <Grid container spacing={2}>
                     {
                         data.map(ele => {
@@ -145,7 +115,8 @@ const MyDrive = () => {
                         })
                     }
                 </Grid>
-            </div> */}
+            </CustomDropzone>
+
 
         </div>
     )
