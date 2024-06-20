@@ -13,7 +13,7 @@ interface IProps {
 const ContentCard:FC<IProps> = ({ id, logo, title, active, onClick }) => {
     return (
         <Grid item xs={6} md={4} lg={3} xl={2} onClick={() => onClick(id) } >
-            <div className='file-card' style={{backgroundColor: active ? "#d4e7ff" : undefined}}>
+            <div className='file-card' style={{backgroundColor: active ? "#d4e7ff" : undefined}} onMouseDown={e=> console.log(e)}>
                 <div className="header">
                     <div className='mr-3'>{logo}</div>
                     <div className="title">{title}</div>
