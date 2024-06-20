@@ -9,7 +9,7 @@ import { Button, TextField, Typography, InputAdornment, Box, DialogActions } fro
 import { useNavigate } from "react-router-dom";
 // import AuthService from "../../../services/auth";
 import EmailIcon from "@mui/icons-material/Email";
-import Logo from "../../../assets/images/logo.png";
+import Logo from "../../../assets/images/logo.svg";
 import useSnackbar from "../../../hooks/useSnackbar";
 
 const ForgetPassword = () => {
@@ -50,7 +50,7 @@ const ForgetPassword = () => {
     <Box className="login-container center" flexDirection="column">
       <img alt="logo" src={Logo} width="63" height="66" />
       <Typography className="margin-top-40 fw-bold welcome" variant="h5">Forget Password</Typography>
-      <p className="sub-text grey-500">Helping you to manage and hire candidates</p>
+      <p className="sub-text grey-500">Helping you to manage and share assets</p>
       <Box className='credential-box' marginTop="40px" marginX="10px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
@@ -70,7 +70,7 @@ const ForgetPassword = () => {
           />
           <DialogActions sx={{ padding: 0 }}>
             <Button className="margin-top-40 height-50" sx={{ marginRight: "40px" }} variant="outlined" fullWidth onClick={() => navigate("/login")}>Back To Login</Button>
-            <Button type="submit" className="margin-top-40 height-50" fullWidth >Send</Button>
+            <Button type="submit" className="margin-top-40 height-50" fullWidth >Submit</Button>
           </DialogActions>
         </form>
       </Box>
