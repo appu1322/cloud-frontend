@@ -16,14 +16,18 @@ import { useNavigate } from "react-router-dom";
 import useSnackbar from "../../../hooks/useSnackbar";
 import { IErrorResponse } from "../../../interfaces";
 
+import { useAppSelector, useAppDispatch, updateAuthDetail } from '../../../redux';
+
 const Login = () => {
+  const state = useAppSelector(state => state.authSlice);
+  const dispatch = useAppDispatch();
   // const authService = AuthService();
   const navigate = useNavigate();
   // const { user } = useUser();
   const { snackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>({
-    resolver: joiResolver(LoginValidation),
+    // resolver: joiResolver(LoginValidation),
   });
 
   // useEffect(() => {
@@ -31,6 +35,9 @@ const Login = () => {
   //     navigate("/");
   //   }
   // }, [user]);
+
+  console.log({state});
+  
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -43,8 +50,9 @@ const Login = () => {
       // const auth = await authService.login(credentials) as IAuthResponse;
       // localStorage.setItem("currentUserToken", auth.data.token);
       // snackbar(auth.message, "info");
-      navigate("/dashboard");
+      // navigate("/dashboard");
 
+      dispatch(updateAuthDetail({email:"534534", accessToken: "34534"}))
     } catch (error) {
       const err = error as IErrorResponse;
       snackbar(err.data.message, "warning");
