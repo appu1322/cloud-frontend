@@ -3,8 +3,14 @@ import PageNotFound from "../components/page-not-found";
 import Layout from "../screens/layout";
 import MyDrive from "../screens/layout/my-drive";
 import Home from "../screens/Home";
+import Login from "../screens/auth/login";
 
 export default createBrowserRouter([
+    {
+        path: "login",
+        element: <Login />,
+        errorElement: <PageNotFound />
+    },
     {
         path: "",
         element: <Layout />,
