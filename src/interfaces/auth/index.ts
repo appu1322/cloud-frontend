@@ -1,4 +1,3 @@
-import { ITeam } from "../configuration";
 import { IResponse } from "../shared/response";
 
 export interface IAuth {
@@ -8,45 +7,28 @@ export interface IAuth {
 }
 
 
-
 export interface IUser {
     _id: string;
-    userId: string;
-    name: string;
+    token: string;
     firstName: string;
     lastName: string;
-    email: string;
-    phone: {
-        country: string;
-        dialCode: string;
-        iso2: string;
-        number: string;
-    };
-    role: string[];
+    gender: 'MALE' | 'FEMALE';
+    status: 'ACTIVE' | 'INACTIVE';
     _role: {
-        name: string;
-        role: "ADMIN" | "SUPERADMIN";
         _id: string;
-        resources: string[];
-    }
-    token: string;
-    integrationCredentials: {
-        access_token: string
-    }
-    integrationMeta: {
-        email: string;
-        family_name: string;
-        given_name: string;
-        hd: string;
-        id: string;
-        locale: string;
         name: string;
-        verified_email: string;
-        picture: string;
-
-    }
-    department: ITeam;
-    designation: string;
+        role: 'SUPERADMIN' | 'USER';
+    };
+    contact: {
+        email: string;
+        mobileNumber: {
+            dialCode: string;
+            iso2: string;
+            country: string;
+        };
+    };
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IAuthResponse extends IResponse {

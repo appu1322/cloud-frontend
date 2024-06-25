@@ -1,43 +1,37 @@
 import "./style.scss";
 import { useState, MouseEvent, useEffect } from "react";
-import { Button, TextField, Typography, InputAdornment, IconButton, Box, Divider } from "@mui/material";
-import { IAuth, IAuthResponse } from "../../../interfaces/auth";
+import { Button, TextField, Typography, InputAdornment, IconButton, Box } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { LoginValidation } from "../../../validations";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-// import AuthService from "../../../services/auth";
+import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import Logo from "../../../assets/images/logo.svg";
-// import GoogleLogo from "../../../assets/images/google-logo.svg";
-// import useUser from "../../../hooks/useUser";
-import { useNavigate } from "react-router-dom";
-import useSnackbar from "../../../hooks/useSnackbar";
-import { IErrorResponse } from "../../../interfaces";
 
-import { useAppSelector, useAppDispatch, updateAuthDetail } from '../../../redux';
+import { LoginValidation } from "../../../validations";
+import { IAuth } from "../../../interfaces/auth";
+import { IErrorResponse } from "../../../interfaces";
+import { useAppSelector, useAppDispatch, updateAuth } from '../../../redux';
+import { useLoginMutation } from "../../../services";
+import Logo from "../../../assets/images/logo.svg";
+import useSnackbar from "../../../hooks/useSnackbar";
 
 const Login = () => {
-  const state = useAppSelector(state => state.authSlice);
-  const dispatch = useAppDispatch();
-  // const authService = AuthService();
   const navigate = useNavigate();
-  // const { user } = useUser();
+  const dispatch = useAppDispatch();
+  const state = useAppSelector(state => state.authSlice);
+  const [loginMutation] = useLoginMutation();
   const { snackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>({
-    // resolver: joiResolver(LoginValidation),
+    resolver: joiResolver(LoginValidation),
   });
 
-  // useEffect(() => {
-  //   if (user?.name?.length) {
-  //     navigate("/");
-  //   }
-  // }, [user]);
-
-  console.log({state});
-  
+  useEffect(() => {
+    if( state.data ) {
+      navigate("/dashboard");
+    }
+  }, [state]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -47,16 +41,14 @@ const Login = () => {
 
   const onLogin = async (credentials: IAuth) => {
     try {
-      // const auth = await authService.login(credentials) as IAuthResponse;
-      // localStorage.setItem("currentUserToken", auth.data.token);
-      // snackbar(auth.message, "info");
-      // navigate("/dashboard");
-
-      dispatch(updateAuthDetail({email:"534534", accessToken: "34534"}))
+      const login = await loginMutation({ email: credentials.email, password: credentials.password }).unwrap();
+      dispatch(updateAuth(login.data))
+      snackbar(login.message, "info");
+      localStorage.setItem("token", login.data.token);
     } catch (error) {
+      console.log(error);
       const err = error as IErrorResponse;
       snackbar(err.data.message, "warning");
-      console.log(error);
     }
   };
 

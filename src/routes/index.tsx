@@ -5,6 +5,7 @@ import MyDrive from "../screens/layout/my-drive";
 import Home from "../screens/Home";
 import Login from "../screens/auth/login";
 import ForgetPassword from "../screens/auth/forgot-password";
+import AuthGuard from "../components/guard";
 
 export default createBrowserRouter([
     {
@@ -18,31 +19,37 @@ export default createBrowserRouter([
         errorElement: <PageNotFound />
     },
     {
-        path: "",
-        element: <Layout />,
+        element: <AuthGuard />,
+        errorElement: <PageNotFound />,
         children: [
             {
-                path: "home",
-                element: <MyDrive />,
+                path: "",
+                element: <Layout />,
+                children: [
+                    {
+                        path: "home",
+                        element: <MyDrive />,
+                        errorElement: <PageNotFound />
+                    },
+                    {
+                        path: "activity",
+                        element: <MyDrive />,
+                        errorElement: <PageNotFound />
+                    },
+                    {
+                        path: "my-drive",
+                        element: <MyDrive />,
+                        errorElement: <PageNotFound />
+                    },
+                    {
+                        path: "test",
+                        element: <Home />,
+                        errorElement: <PageNotFound />
+                    }
+                ],
                 errorElement: <PageNotFound />
             },
-            {
-                path: "activity",
-                element: <MyDrive />,
-                errorElement: <PageNotFound />
-            },
-            {
-                path: "my-drive",
-                element: <MyDrive />,
-                errorElement: <PageNotFound />
-            },
-            {
-                path: "test",
-                element: <Home />,
-                errorElement: <PageNotFound />
-            }
-        ],
-        errorElement: <PageNotFound />
+        ]
     },
     {
         path: "*",

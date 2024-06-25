@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { IErrorResponse } from "../../../interfaces";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { useState, MouseEvent, useEffect } from "react";
+import { useState, MouseEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ResetPasswordValidation } from "../../../validations";
-import { IAuth, IAuthResponse } from "../../../interfaces/auth";
+import { IAuth } from "../../../interfaces/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, TextField, Typography, InputAdornment, IconButton, Box } from "@mui/material";
 // import useUser from "../../../hooks/useUser";
@@ -24,6 +24,9 @@ const ResetPassword = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<IAuth>({
     resolver: joiResolver(ResetPasswordValidation),
   });
+
+  console.log({ id });
+  
 
 
   // useEffect(() => {

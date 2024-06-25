@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IErrorResponse } from "../../../interfaces";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { forgetPasswordValidation } from "../../../validations";
-import { IAuth, IAuthResponse } from "../../../interfaces/auth";
+import { IAuth } from "../../../interfaces/auth";
 import { Button, TextField, Typography, InputAdornment, Box, DialogActions } from "@mui/material";
 // import useUser from "../../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +34,8 @@ const ForgetPassword = () => {
       ...data
     };
     try {
+      console.log({ payload });
+      
       // const auth = await authService.forgetPassword(payload) as IAuthResponse;
       // snackbar(auth.message, "info");
       navigate("/login");
