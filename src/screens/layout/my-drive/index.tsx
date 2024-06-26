@@ -53,9 +53,6 @@ const MyDrive = () => {
         shiftPressing: false
     });
 
-    console.log({data});
-    
-
     useEffect(() => {
         window.addEventListener("keydown", e => {
             if (e.repeat) {
