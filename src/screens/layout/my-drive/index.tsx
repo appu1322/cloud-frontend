@@ -1,6 +1,5 @@
 import "./style.scss";
 import { Grid, IconButton, Typography } from '@mui/material';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import ContentHeader from '../../../components/content-header';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -8,34 +7,6 @@ import ContentCard from "../../../components/content-card";
 import { useEffect, useState } from "react";
 import CustomDropzone from "../../../components/custom-dropzone";
 import { useObjectsQuery } from "../../../services";
-
-const datas = [
-    {
-        id: 1,
-        title: "test",
-        logo: <InsertDriveFileIcon fontSize="small" />
-    },
-    {
-        id: 2,
-        title: "test2",
-        logo: <InsertDriveFileIcon fontSize="small" />
-    },
-    {
-        id: 3,
-        title: "tes3",
-        logo: <InsertDriveFileIcon fontSize="small" />
-    },
-    {
-        id: 4,
-        title: "tes4",
-        logo: <InsertDriveFileIcon fontSize="small" />
-    },
-    {
-        id: 5,
-        title: "tes5",
-        logo: <InsertDriveFileIcon fontSize="small" />
-    }
-]
 
 interface IState {
     selected: Array<string | number>
