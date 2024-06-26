@@ -5,3 +5,4 @@ export const HEADERS = {
 }
 
 export const USER = 'user';
+export const OBJECT = 'object';

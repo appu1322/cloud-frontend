@@ -1,21 +1,30 @@
-import { IObjectsResponse } from "../../interfaces";
-import HttpService from "../http"
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { BASE_URL, HEADERS, OBJECT } from '../endpoints';
+import { IObjectResponse, IObjectsResponse } from '../../interfaces';
 
-const ObjectService = () => {
-    const { httpRequest } = HttpService();
+export const objectService = createApi({
+    reducerPath: 'objobjectSctService',
+    baseQuery: fetchBaseQuery({
+        baseUrl: BASE_URL,
+        headers: HEADERS
+    }),
+    endpoints: (builder) => ({
+        object: builder.query<IObjectResponse, object>({
+            query: (search) => ({
+                url: OBJECT,
+                method: "GET",
+                params: search
+            })
+        }),
 
-    const getObjects = async (search: object): Promise<IObjectsResponse> => new Promise((resolve, reject) => {
-        httpRequest<IObjectsResponse>(
-            "GET",
-            "",
-            {},
-            search
-        )
-            .then(resolve)
-            .then(reject)
-    });
+        objects: builder.query<IObjectsResponse, object>({
+            query: (search) => ({
+                url: OBJECT + "/list",
+                method: "GET",
+                params: search
+            })
+        })
+    }),
+});
 
-    return { getObjects }
-}
-
-export default ObjectService;
+export const { useObjectQuery, useObjectsQuery } = objectService;

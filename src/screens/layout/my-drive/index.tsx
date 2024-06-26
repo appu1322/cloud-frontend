@@ -7,8 +7,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ContentCard from "../../../components/content-card";
 import { useEffect, useState } from "react";
 import CustomDropzone from "../../../components/custom-dropzone";
+import { useObjectsQuery } from "../../../services";
 
-const data = [
+const datas = [
     {
         id: 1,
         title: "test",
@@ -42,10 +43,18 @@ interface IState {
 }
 
 const MyDrive = () => {
+    const { data } = useObjectsQuery({
+        pagination: true,
+        page: 1,
+        limit: 20
+    });
     const [state, setState] = useState<IState>({
         selected: [],
         shiftPressing: false
     });
+
+    console.log({data});
+    
 
     useEffect(() => {
         window.addEventListener("keydown", e => {
@@ -103,13 +112,14 @@ const MyDrive = () => {
             <CustomDropzone height="calc(100% - 113px)">
                 <Grid container spacing={2}>
                     {
-                        data.map(ele => {
+                        data?.data.map(ele => {
                             return <ContentCard
-                                key={ele.id}
-                                id={ele.id}
-                                logo={ele.logo}
-                                title={ele.title}
-                                active={state.selected.includes(ele.id)}
+                                key={ele._id}
+                                id={ele._id}
+                                mimeType={ele.originalType}
+                                title={ele.originalName}
+                                active={state.selected.includes(ele._id)}
+                                previewUrl={ele.thumbnailPath}
                                 onClick={onSelect}
                             />
                         })

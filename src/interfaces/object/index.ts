@@ -2,7 +2,9 @@ import { IResponse } from "../shared";
 
 interface IObject {
     _id: string,
-    name: string;
+    originalName: string;
+    originalType: string;
+    thumbnailPath: string;
     sizeInByte: number;
     type: string;
     extension: string;

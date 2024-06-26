@@ -5,6 +5,9 @@ import { Logout } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import useScreenSize from '../../hooks/useScreenSize';
+import { updateAuth, useAppDispatch } from '../../redux';
+import { useNavigate } from 'react-router-dom';
+
 
 interface IState {
   accountSettingAnchorEl: null | HTMLElement
@@ -16,14 +19,27 @@ interface IProps {
 }
 
 const Navbar: FC<IProps> = ({ toggleSidebar, onToggleSidebar }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const screenSize = useScreenSize();
   const [state, setState] = useState<IState>({
     accountSettingAnchorEl: null
   })
   const showAccountSetting = Boolean(state.accountSettingAnchorEl);
 
-  const handleAccountSetting = (event: React.MouseEvent<HTMLElement>) => {
-    setState(prev => ({ ...prev, accountSettingAnchorEl: event.currentTarget }))
+  const handleAccountSetting = (event?: React.MouseEvent<HTMLElement>) => {
+    if( event ){
+      setState(prev => ({ ...prev, accountSettingAnchorEl: event.currentTarget }))
+    } else {
+      setState(prev => ({ ...prev, accountSettingAnchorEl: null }))
+    }
+  }
+
+  const handleLogout = () => {
+    dispatch(updateAuth(null));
+    localStorage.removeItem("token");
+    navigate("/login");
+    handleAccountSetting();
   }
 
   return (
@@ -53,7 +69,7 @@ const Navbar: FC<IProps> = ({ toggleSidebar, onToggleSidebar }) => {
                 anchorEl={state.accountSettingAnchorEl}
                 id="account-menu"
                 open={showAccountSetting}
-                onClose={handleAccountSetting}
+                onClose={() => handleAccountSetting()}
                 onClick={handleAccountSetting}
                 PaperProps={{
                   elevation: 0,
@@ -88,7 +104,7 @@ const Navbar: FC<IProps> = ({ toggleSidebar, onToggleSidebar }) => {
                   <Avatar /> My account
                 </MenuItem>
                 <Divider />
-                <MenuItem>
+                <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
