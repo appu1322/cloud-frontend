@@ -4,11 +4,11 @@ import { Grid, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 
+import { IObjectState } from "../../../interfaces";
 import { useObjectsQuery } from "../../../services";
 import ContentCard from "../../../components/content-card";
 import CustomDropzone from "../../../components/custom-dropzone";
 import ContentHeader from '../../../components/content-header';
-import { IObjectState } from "../../../interfaces";
 
 const MyDrive = () => {
     const [state, setState] = useState<IObjectState>({

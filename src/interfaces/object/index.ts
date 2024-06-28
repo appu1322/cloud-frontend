@@ -1,5 +1,11 @@
 import { IResponse } from "../shared";
 
+export interface IObjectFile {
+    id: number,
+    file: File,
+    status: "INQUEUE" | "INPROGRESS" | "COMPLETED" | "FAILDED"
+  }
+
 export interface IObject {
     _id: string,
     originalName: string;

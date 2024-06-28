@@ -7,6 +7,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
 import { useEffect, useState } from "react";
 import useScreenSize from "../../hooks/useScreenSize";
+import InputFileUpload from "../../components/mui/file-upload";
+import TrackUpload from "../../components/track-upload";
 
 const Layout = () => {
   const [seletedMenu, setSeletedMenu] = useState("home")
@@ -23,13 +25,14 @@ const Layout = () => {
   return (
     <>
       <Navbar toggleSidebar={toggleSidebar} onToggleSidebar={setToggleSidebar} />
+      <TrackUpload />
 
       <div className='layout'>
         {
           screenSize.width > 768 ?
             <>
               <div className="sidebar">
-                <Button className="new-btn" variant="outlined" fullWidth>New</Button>
+                <InputFileUpload fullWidth onChange={() => {}} />
 
                 <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
                   <ListItemIcon>

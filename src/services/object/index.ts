@@ -9,6 +9,22 @@ export const objectService = createApi({
         headers: HEADERS
     }),
     endpoints: (builder) => ({
+        addFolder: builder.mutation<IObjectResponse, object>({
+            query: (payload) => ({
+                url: OBJECT + "/folder",
+                method: "POST",
+                body: payload
+            })
+        }),
+
+        addObject: builder.mutation<IObjectResponse, object>({
+            query: (payload) => ({
+                url: OBJECT,
+                method: "POST",
+                body: payload
+            })
+        }),
+
         object: builder.query<IObjectResponse, object>({
             query: (search) => ({
                 url: OBJECT,
@@ -27,4 +43,4 @@ export const objectService = createApi({
     }),
 });
 
-export const { useObjectQuery, useObjectsQuery } = objectService;
+export const { useObjectQuery, useObjectsQuery, useAddObjectMutation, useAddFolderMutation } = objectService;

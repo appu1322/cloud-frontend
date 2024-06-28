@@ -1,0 +1,21 @@
+.custom-snakebar {
+    position: absolute;
+    right: 40px;
+    bottom: 0;
+    z-index: 2;
+    width: 360px;
+
+    .header {
+        padding: 8px 20px;
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .body{
+        height: 360px;
+        border: 1px solid;
+        padding: 0px 20px;
+    }
+}
