@@ -5,10 +5,10 @@ import { checkPerimission } from '../middlewares'
 
 export const store = configureStore({
   reducer: {
+    authSlice,
     [authService.reducerPath]: authService.reducer,
     [userService.reducerPath]: userService.reducer,
-    [objectService.reducerPath]: objectService.reducer,
-    authSlice
+    [objectService.reducerPath]: objectService.reducer
   },
   middleware: (defaultMiddleware) => defaultMiddleware()
     .concat(

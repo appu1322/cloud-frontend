@@ -22,7 +22,7 @@ export const objectService = createApi({
                 url: OBJECT + "/list",
                 method: "GET",
                 params: search
-            })
+            }),
         })
     }),
 });

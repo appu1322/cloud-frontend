@@ -1,44 +1,71 @@
 import "./style.scss";
+import { useEffect, useState } from "react";
 import { Grid, IconButton, Typography } from '@mui/material';
-import ContentHeader from '../../../components/content-header';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
-import ContentCard from "../../../components/content-card";
-import { useEffect, useState } from "react";
-import CustomDropzone from "../../../components/custom-dropzone";
-import { useObjectsQuery } from "../../../services";
 
-interface IState {
-    selected: Array<string | number>
-    shiftPressing: boolean
-}
+import { useObjectsQuery } from "../../../services";
+import ContentCard from "../../../components/content-card";
+import CustomDropzone from "../../../components/custom-dropzone";
+import ContentHeader from '../../../components/content-header';
+import { IObjectState } from "../../../interfaces";
 
 const MyDrive = () => {
-    const { data } = useObjectsQuery({
-        pagination: true,
-        page: 1,
-        limit: 20
-    });
-    const [state, setState] = useState<IState>({
+    const [state, setState] = useState<IObjectState>({
+        data: [],
         selected: [],
-        shiftPressing: false
+        shiftPressing: false,
+        pagination: {
+            page: 1,
+            totalPages: 1,
+            totalRecords: 0
+        }
+    });
+    const { data, refetch } = useObjectsQuery({
+        pagination: true,
+        page: state.pagination.page,
+        limit: 20
     });
 
     useEffect(() => {
-        window.addEventListener("keydown", e => {
-            if (e.repeat) {
-                return
-            }
-            setState(prev => ({ ...prev, shiftPressing: true }))
-        });
-        window.addEventListener("keyup", e => {
-            if (e.repeat) {
-                return
-            }
-            setState(prev => ({ ...prev, shiftPressing: false }))
-        });
+        if (data?.data) {
+            const meta = data.meta;
+            const objects = data.data;
+            setState(prev => ({
+                ...prev,
+                data: [...prev.data, ...objects],
+                pagination: {
+                    ...prev.pagination,
+                    totalPages: meta.totalPages,
+                    totalRecords: meta.totalRecords
+                }
+            }))
+        }
+    }, [data?.data]);
 
-    }, [])
+    const onKeyUp = (e: KeyboardEvent) => {
+        if (e.repeat) {
+            return
+        }
+        setState(prev => ({ ...prev, shiftPressing: true }))
+    }
+
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.repeat) {
+            return
+        }
+        setState(prev => ({ ...prev, shiftPressing: false }))
+    }
+
+    useEffect(() => {
+        window.addEventListener("keydown", onKeyUp);
+        window.addEventListener("keyup", onKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", onKeyUp);
+            window.removeEventListener("keyup", onKeyDown);
+        }
+    }, []);
 
 
     const onSelect = (id: string | number) => {
@@ -53,6 +80,19 @@ const MyDrive = () => {
             setState(prev => ({ ...prev, selected: [...state.selected, id] }));
         } else {
             setState(prev => ({ ...prev, selected: [id] }));
+        }
+    }
+
+    const onScroll = () => {
+        if (state.pagination.page !== state.pagination.totalPages) {
+            setState(prev => ({
+                ...prev,
+                pagination: {
+                    ...prev.pagination,
+                    page: prev.pagination.page + 1
+                }
+            }));
+            refetch();
         }
     }
 
@@ -77,10 +117,10 @@ const MyDrive = () => {
                 }
             </div>
 
-            <CustomDropzone height="calc(100% - 113px)">
+            <CustomDropzone height="calc(100% - 113px)" onScroll={onScroll}>
                 <Grid container spacing={2}>
                     {
-                        data?.data.map(ele => {
+                        state.data.map(ele => {
                             return <ContentCard
                                 key={ele._id}
                                 id={ele._id}

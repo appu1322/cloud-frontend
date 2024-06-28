@@ -1,6 +1,6 @@
 import { IResponse } from "../shared";
 
-interface IObject {
+export interface IObject {
     _id: string,
     originalName: string;
     originalType: string;
@@ -13,6 +13,17 @@ interface IObject {
     isDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface IObjectState {
+    data: IObject[]
+    selected: Array<string | number>
+    shiftPressing: boolean
+    pagination: {
+        totalPages: number
+        page: number,
+        totalRecords: number
+    }
 }
 
 export interface IObjectsResponse extends IResponse {
