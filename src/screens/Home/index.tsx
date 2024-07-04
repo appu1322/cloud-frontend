@@ -45,8 +45,6 @@ const Home = () => {
 
   const onInputUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    console.log({files});
-    
     if (files && files.length) {
       const modifiedFiles = Array.from(files).map((file, i) => ({ id: i, file, status: "Ready for upload" }) )
       setState(modifiedFiles);
@@ -58,8 +56,10 @@ const Home = () => {
     try {
       setIsPending(true)
       for await (const data of state) {
-        if( data.status !== "Uploaded" ){
+        if( data.status !== "Uploadeds" ){
           const form = new FormData()
+          console.log({ file: data.file });
+          
           form.append("file", data.file)
           await httpFormRequest(form);
           const upoaded = { ...data, status: "Uploaded" }
@@ -95,7 +95,7 @@ const Home = () => {
       <Typography className="mt-3 center" variant="h4">Legendary Cloud</Typography>
 
       <div>
-        <InputFileUpload multiple onChange={onInputUpload} />
+        <input type="file" multiple onChange={onInputUpload} />
         <Button className='ml-2' variant="contained" disabled={(!state?.length || isPending) ? true : false} onClick={onSubmit}>Upload</Button>
         { isPending && <div className='ml-2'>Loading...</div>}
       </div>

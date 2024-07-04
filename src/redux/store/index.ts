@@ -12,7 +12,7 @@ export const store = configureStore({
     [userService.reducerPath]: userService.reducer,
     [objectService.reducerPath]: objectService.reducer,
   },
-  middleware: (defaultMiddleware) => defaultMiddleware()
+  middleware: (defaultMiddleware) => defaultMiddleware({ serializableCheck: false })
     .concat(
       authService.middleware,
       userService.middleware,

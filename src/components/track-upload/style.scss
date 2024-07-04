@@ -13,9 +13,24 @@
         justify-content: space-between;
     }
 
-    .body{
+    .body {
         height: 360px;
         border: 1px solid;
-        padding: 0px 20px;
+        transition: all 0.2s;
+        overflow: auto;
+        background-color: #fff;
+
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+
+            .title {
+                white-space: nowrap;
+                overflow: hidden;
+                width: 230px;
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 import { useAddFolderMutation, useAddObjectMutation } from "../services"
 import { useAppDispatch } from "../redux";
 import { updateFileStatus, updateFiles } from "../redux/slices/objectSlice";
-import { IObjectFile } from "../interfaces";
+import { IObjectFile, IUploadResponse } from "../interfaces";
 import HttpService from "../services/http";
 
 
@@ -24,6 +24,7 @@ const useObject = () => {
 
     const addFiles = async (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
+        
         if (files && files.length) {
             const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: i + 1, file, status: "INQUEUE" }))
             dispatch(updateFiles(modifiedFiles));
@@ -34,8 +35,8 @@ const useObject = () => {
         try {
             const form = new FormData()
             form.append("file", file)
-            const uplaodedFile = await httpFormRequest(form);
-            console.log({ uplaodedFile });
+            const uplaodedFile = await httpFormRequest<IUploadResponse>(form);
+            return uplaodedFile;
         } catch (error) {
             dispatch(updateFileStatus({ id, status: "FAILDED" }));
             console.log({ error });

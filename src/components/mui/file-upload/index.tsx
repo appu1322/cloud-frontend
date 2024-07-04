@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import { Box, Menu, MenuItem } from '@mui/material';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import useObject from '../../../hooks/useObject';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -19,10 +20,10 @@ const VisuallyHiddenInput = styled('input')({
 type props = {
     fullWidth?: boolean
     multiple?: boolean
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-const InputFileUpload: FC<props> = ({ fullWidth, multiple, onChange }) => {
+const InputFileUpload: FC<props> = ({ fullWidth, multiple }) => {
+    const { addFiles } = useObject();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,7 +66,7 @@ const InputFileUpload: FC<props> = ({ fullWidth, multiple, onChange }) => {
                             New Folder
                         </Box>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem>
                         <Box
                             component="label"
                             role={undefined}
@@ -73,7 +74,10 @@ const InputFileUpload: FC<props> = ({ fullWidth, multiple, onChange }) => {
                             sx={{ cursor: "pointer" }}
                         >
                             Upload file
-                            <VisuallyHiddenInput type="file" multiple={multiple} onChange={onChange} />
+                            <VisuallyHiddenInput type="file" multiple={multiple} onChange={(e) => {
+                                addFiles(e);
+                                handleClose();
+                            }} />
                         </Box>
                     </MenuItem>
                 </Menu>

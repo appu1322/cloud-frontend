@@ -1,5 +1,6 @@
 import useLoader from "../../hooks/useLoader";
 import axios, { AxiosError, AxiosProgressEvent } from "axios";
+import { BASE_URL, HEADERS } from "../endpoints";
 
 const HttpService = () => {
     const { setIsLoading } = useLoader();
@@ -13,13 +14,10 @@ const HttpService = () => {
         setIsLoading(() => true);
         axios({
             method,
-            url: `${import.meta.env.VITE_BASE_URL}/${url}`,
+            url: `${BASE_URL}/${url}`,
             data,
             params,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("currentUserToken") || ""}`
-            }
+            headers: HEADERS
         })
             .then((response) => {
                 setIsLoading(() => false);
@@ -42,13 +40,15 @@ const HttpService = () => {
             axios(
                 {
                     method: "POST",
-                    url: `${import.meta.env.VITE_BASE_URL}/upload/`,
+                    url: `${BASE_URL}/object/upload`,
                     data,
                     headers: {
+                        ...HEADERS,
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${localStorage.getItem("currentUserToken") || ""}`
                     },
                     onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                        console.log({ progressEvent });
+                        
                         if (progressEvent.total) {
                             const progress = (progressEvent.loaded / progressEvent.total) * 50;
                             console.log("uploaded: ", { progress });
@@ -72,7 +72,7 @@ const HttpService = () => {
                     const error = err as AxiosError;
                     setIsLoading(() => false);
                     if (error.response?.status === 401) {
-                        localStorage.removeItem("currentUserToken");
+                        localStorage.removeItem("token");
                     }
                     reject(err.response);
                 });

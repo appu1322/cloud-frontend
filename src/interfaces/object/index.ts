@@ -4,7 +4,7 @@ export interface IObjectFile {
     id: number,
     file: File,
     status: "INQUEUE" | "INPROGRESS" | "COMPLETED" | "FAILDED"
-  }
+}
 
 export interface IObject {
     _id: string,
@@ -44,4 +44,17 @@ export interface IObjectsResponse extends IResponse {
 
 export interface IObjectResponse extends IResponse {
     data: IObject;
+}
+export interface IUploadResponse extends IResponse {
+    data: {
+        fieldname: string;
+        originalname: string;
+        encoding: string;
+        mimetype: string;
+        destination: string;
+        filename: string;
+        originalPath: string;
+        thumbnailPath: string;
+        size: number;
+    };
 }

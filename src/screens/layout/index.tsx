@@ -32,7 +32,7 @@ const Layout = () => {
           screenSize.width > 768 ?
             <>
               <div className="sidebar">
-                <InputFileUpload fullWidth onChange={() => {}} />
+                <InputFileUpload multiple fullWidth />
 
                 <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
                   <ListItemIcon>
