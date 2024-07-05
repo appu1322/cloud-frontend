@@ -46,21 +46,21 @@ const HttpService = () => {
                         ...HEADERS,
                         "Content-Type": "multipart/form-data",
                     },
-                    onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-                        console.log({ progressEvent });
-                        
-                        if (progressEvent.total) {
-                            const progress = (progressEvent.loaded / progressEvent.total) * 50;
-                            console.log("uploaded: ", { progress });
 
-                        }
-                    },
-                    onDownloadProgress: (progressEvent) => {
-                        if (progressEvent.total) {
-                            const progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
-                            console.log("Download: ", { progress });
-                        }
-                    },
+                    // onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                    //     if (progressEvent.total) {
+                    //         const progress = (progressEvent.loaded / progressEvent.total) * 50;
+                    //         console.log("uploaded: ", { progress });
+
+                    //     }
+                    // },
+
+                    // onDownloadProgress: (progressEvent) => {
+                    //     if (progressEvent.total) {
+                    //         const progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
+                    //         console.log("Download: ", { progress });
+                    //     }
+                    // },
                 }
             )
 

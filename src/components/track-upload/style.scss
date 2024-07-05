@@ -4,10 +4,12 @@
     bottom: 0;
     z-index: 2;
     width: 360px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
 
     .header {
         padding: 8px 20px;
-        background-color: red;
+        background-color: #f3f3f3;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -15,7 +17,6 @@
 
     .body {
         height: 360px;
-        border: 1px solid;
         transition: all 0.2s;
         overflow: auto;
         background-color: #fff;

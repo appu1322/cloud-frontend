@@ -7,14 +7,19 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import imageIcon from '../../assets/images/image.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector, updateUploadStatus } from "../../redux";
 import useObject from "../../hooks/useObject";
 import { formatMimetype } from "../../utilities/helper";
+import WarningDialog from "../mui/warning-dialog";
 
 const TrackUpload = () => {
   const [expand, setExpand] = useState(true);
+  const [isClose, setIsClose] = useState(true);
+  const [warning, setWarning] = useState(false);
   const { upload, addObject } = useObject();
   const objects = useAppSelector(state => state.objectSlice);
+  const dispatch = useAppDispatch();
+  const completedObject = objects.files.filter(ele => ele.status === "COMPLETED");
 
   const initiateUpload = async () => {
     for await (const object of objects.files) {
@@ -34,21 +39,36 @@ const TrackUpload = () => {
         }
       }
     }
+
+    dispatch(updateUploadStatus("COMPLETED"));
   }
 
   useEffect(() => {
-    initiateUpload();
-  }, [objects]);
+    const totalFiles = objects.files.length;
+    if (totalFiles && totalFiles !== completedObject.length && objects.status !== "PROGRESS") {
+      setIsClose(false);
+      dispatch(updateUploadStatus("PROGRESS"));
+      initiateUpload();
+    }
+  }, [objects.files, objects.status]);
+
+  const onclose = () => {
+    if( objects.status === "PROGRESS" && objects.files.length !== completedObject.length ) {
+      setWarning(true);
+    } else {
+      setIsClose(true);
+    }
+  }
 
   return (
-    <div className="custom-snakebar">
+    <div className="custom-snakebar" style={{ display: isClose ? "none" : "initial" }}>
       <div className="header">
-        <Typography variant="body1">{3} Upload Completed</Typography>
+        <Typography variant="body1">{completedObject.length} Upload Completed</Typography>
         <div>
           <IconButton onClick={() => setExpand(!expand)}>
             {expand ? <ExpandMoreIcon /> : <ExpandLessIcon />}
           </IconButton>
-          <IconButton>
+          <IconButton onClick={onclose}>
             <CloseIcon />
           </IconButton>
         </div>
@@ -73,6 +93,14 @@ const TrackUpload = () => {
         }
 
       </div>
+
+      <WarningDialog 
+        isOpen={warning}
+        onClose={() => setWarning(false)}
+        onConfirm={() => setWarning(false)}
+        title="Uploading still in progress"
+        description="Do you want cancelling uploading"
+      />
     </div>
   )
 }

@@ -12,3 +12,4 @@ export const useAppSelector = useSelector.withTypes<RootState>()
 
 // Reducers 
 export * from "./slices/authSlice";
+export * from "./slices/objectSlice";

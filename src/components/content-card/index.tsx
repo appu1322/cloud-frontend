@@ -4,6 +4,7 @@ import { FC } from 'react';
 import pdfIcon from '../../assets/images/pdf.svg';
 import fileIcon from '../../assets/images/file.png';
 import imageIcon from '../../assets/images/image.svg';
+import videIcon from '../../assets/images/video.svg';
 import { formatMimetype } from "../../utilities/helper";
 
 interface IProps {
@@ -22,6 +23,7 @@ const ContentCard: FC<IProps> = ({ id, mimeType, title, active, previewUrl, onCl
         switch (type) {
             case "images": return imageIcon
             case "documents": return pdfIcon
+            case "videos": return videIcon
             default: return fileIcon
         }
     }

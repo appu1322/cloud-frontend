@@ -26,12 +26,12 @@ const useObject = () => {
         const files = e.target.files;
         
         if (files && files.length) {
-            const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: i + 1, file, status: "INQUEUE" }))
+            const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: file.name.toLowerCase(), file, status: "INQUEUE" }))
             dispatch(updateFiles(modifiedFiles));
         }
     }
 
-    const upload = async (id: number, file: File) => {
+    const upload = async (id: number | string, file: File) => {
         try {
             const form = new FormData()
             form.append("file", file)
@@ -43,7 +43,7 @@ const useObject = () => {
         }
     }
 
-    const addObject = async (id: number, payload: object) => {
+    const addObject = async (id: number | string, payload: object) => {
         try {
             const object = await objectMutation(payload);
             dispatch(updateFileStatus({ id, status: "COMPLETED" }));
