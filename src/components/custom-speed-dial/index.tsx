@@ -37,7 +37,7 @@ const CustomSpeedDial = () => {
                 sx={{ cursor: "pointer" }}
             >
                 <CloudUploadIcon />
-                <VisuallyHiddenInput type="file" multiple onChange={addFiles} />
+                <VisuallyHiddenInput type="file" multiple onChange={e => addFiles(e.target.files)} />
             </Box>
 
             , name: 'Upload'

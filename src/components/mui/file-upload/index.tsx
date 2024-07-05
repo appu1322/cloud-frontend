@@ -75,7 +75,7 @@ const InputFileUpload: FC<props> = ({ fullWidth, multiple }) => {
                         >
                             Upload file
                             <VisuallyHiddenInput type="file" multiple={multiple} onChange={(e) => {
-                                addFiles(e);
+                                addFiles(e.target.files);
                                 handleClose();
                             }} />
                         </Box>

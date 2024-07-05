@@ -22,9 +22,7 @@ const useObject = () => {
         }
     }
 
-    const addFiles = async (e: ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        
+    const addFiles = async (files: FileList | null) => {    
         if (files && files.length) {
             const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: file.name.toLowerCase(), file, status: "INQUEUE" }))
             dispatch(updateFiles(modifiedFiles));
