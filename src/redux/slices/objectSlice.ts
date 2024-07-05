@@ -29,7 +29,7 @@ export const objectSlice = createSlice({
     },
 
     updateFiles: (state, action: PayloadAction<IObjectFile[]>) => {
-      return { ...state, files: [...state.files, ...action.payload] }
+      return { ...state, files: action.payload.length ? [...state.files, ...action.payload] : [] }
     },
 
     updateFileStatus: (state, action: PayloadAction<{ id: number | string, status: "INPROGRESS" | "COMPLETED" | "FAILDED" }>) => {

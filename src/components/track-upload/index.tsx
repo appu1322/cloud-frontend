@@ -7,7 +7,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import imageIcon from '../../assets/images/image.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useAppDispatch, useAppSelector, updateUploadStatus } from "../../redux";
+import { useAppDispatch, useAppSelector, updateUploadStatus, updateFiles } from "../../redux";
 import useObject from "../../hooks/useObject";
 import { formatMimetype } from "../../utilities/helper";
 import WarningDialog from "../mui/warning-dialog";
@@ -57,6 +57,7 @@ const TrackUpload = () => {
       setWarning(true);
     } else {
       setIsClose(true);
+      dispatch(updateFiles([]));
     }
   }
 

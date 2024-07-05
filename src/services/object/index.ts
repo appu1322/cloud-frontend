@@ -4,6 +4,7 @@ import { IObjectResponse, IObjectsResponse } from '../../interfaces';
 
 export const objectService = createApi({
     reducerPath: 'objobjectSctService',
+    tagTypes: ["addFile"],
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
         headers: HEADERS
@@ -14,7 +15,8 @@ export const objectService = createApi({
                 url: OBJECT + "/folder",
                 method: "POST",
                 body: payload
-            })
+            }),
+            invalidatesTags: ["addFile"]
         }),
 
         addObject: builder.mutation<IObjectResponse, object>({
@@ -22,7 +24,8 @@ export const objectService = createApi({
                 url: OBJECT,
                 method: "POST",
                 body: payload
-            })
+            }),
+            invalidatesTags: ["addFile"]
         }),
 
         object: builder.query<IObjectResponse, object>({
@@ -39,6 +42,7 @@ export const objectService = createApi({
                 method: "GET",
                 params: search
             }),
+            providesTags: ["addFile"]
         })
     }),
 });

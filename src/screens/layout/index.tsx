@@ -1,5 +1,5 @@
 import "./index.scss";
-import { Button, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import SaveIcon from '@mui/icons-material/Save';
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import useScreenSize from "../../hooks/useScreenSize";
 import InputFileUpload from "../../components/mui/file-upload";
 import TrackUpload from "../../components/track-upload";
+import CustomSpeedDial from "../../components/custom-speed-dial";
 
 const Layout = () => {
   const [seletedMenu, setSeletedMenu] = useState("home")
@@ -34,7 +35,7 @@ const Layout = () => {
               <div className="sidebar">
                 <InputFileUpload multiple fullWidth />
 
-                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
+                <ListItemButton sx={{ borderRadius: "30px", marginTop:"20px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
@@ -88,6 +89,7 @@ const Layout = () => {
                   color: toggleSidebar ? "#fff" : undefined
                 }}
               >
+                <CustomSpeedDial />
                 <Outlet />
               </div>
             </>

@@ -24,7 +24,8 @@ const MyDrive = () => {
     const { data, refetch } = useObjectsQuery({
         pagination: true,
         page: state.pagination.page,
-        limit: 20
+        limit: 20,
+        skip: false
     });
 
     useEffect(() => {
@@ -120,7 +121,7 @@ const MyDrive = () => {
             <CustomDropzone height="calc(100% - 113px)" onScroll={onScroll}>
                 <Grid container spacing={2}>
                     {
-                        state.data.map(ele => {
+                        data?.data.map(ele => {
                             return <ContentCard
                                 key={ele._id}
                                 id={ele._id}
