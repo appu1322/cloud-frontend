@@ -1,8 +1,9 @@
 import "./style.scss";
 import { useEffect, useState } from "react";
-import { Grid, IconButton, Typography } from '@mui/material';
+import { Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { IObjectState } from "../../../interfaces";
 import { useObjectsQuery } from "../../../services";
@@ -111,14 +112,23 @@ const MyDrive = () => {
                         <div className="active">
                             <IconButton onClick={() => setState(prev => ({ ...prev, selected: [] }))}><CloseIcon /></IconButton>
                             <Typography variant="body2">{state.selected.length} Selected</Typography>
-                            <IconButton className="ml-3"><DownloadIcon /></IconButton>
+                            <IconButton className="ml-3">
+                                <Tooltip title="Download">
+                                    <DownloadIcon />
+                                </Tooltip>
+                            </IconButton>
+                            <IconButton className="ml-1">
+                                <Tooltip title="Move to Trash">
+                                    <DeleteIcon />
+                                </Tooltip>
+                            </IconButton>
                         </div>
                         :
                         <Typography variant="caption">No item selected!</Typography>
                 }
             </div>
 
-            <CustomDropzone height="calc(100% - 113px)" onScroll={onScroll}>
+            <CustomDropzone height="calc(100% - 135px)" onScroll={onScroll}>
                 <Grid container spacing={2}>
                     {
                         data?.data.map(ele => {
