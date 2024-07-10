@@ -7,7 +7,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import imageIcon from '../../assets/images/image.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useAppDispatch, useAppSelector, updateUploadStatus, updateFiles } from "../../redux";
+import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles } from "../../redux";
 import useObject from "../../hooks/useObject";
 import { formatMimetype } from "../../utilities/helper";
 import WarningDialog from "../mui/warning-dialog";
@@ -17,7 +17,8 @@ const TrackUpload = () => {
   const [isClose, setIsClose] = useState(true);
   const [warning, setWarning] = useState(false);
   const { upload, addObject } = useObject();
-  const objects = useAppSelector(state => state.objectSlice);
+  const objectDetail = useAppSelector(state => state.objectSlice);
+  const objects = useAppSelector(state => state.objectSlice.upload);
   const dispatch = useAppDispatch();
   const completedObject = objects.files.filter(ele => ele.status === "COMPLETED");
 
@@ -30,7 +31,7 @@ const TrackUpload = () => {
             originalName: object.file.name,
             sizeInByte: object.file.size,
             originalType: object.file.type,
-            parentId: objects.parentId,
+            parentId: objectDetail.parentId,
             extension: formatMimetype(object.file.type),
             originalPath: uploadedObject.data.originalPath,
             thumbnailPath: uploadedObject.data.thumbnailPath,
@@ -57,7 +58,7 @@ const TrackUpload = () => {
       setWarning(true);
     } else {
       setIsClose(true);
-      dispatch(updateFiles([]));
+      dispatch(updateUploadFiles([]));
     }
   }
 

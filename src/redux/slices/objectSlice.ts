@@ -5,45 +5,62 @@ import { IObjectFile } from '../../interfaces';
 interface IObjectState {
   path: string;
   parentId: string;
-  files: Array<IObjectFile>,
-  status: "PROGRESS" | "COMPLETED"
+  upload: {
+    files: Array<IObjectFile>,
+    status: "PROGRESS" | "COMPLETED"
+  },
+  export: {
+    files: Array<string>
+  }
+
 }
 
 const initialState: IObjectState = {
   path: "/",
   parentId: "root",
-  files: [],
-  status: "COMPLETED"
+  upload: {
+    files: [],
+    status: "COMPLETED"
+  },
+  export: {
+    files: []
+  }
 }
 
 export const objectSlice = createSlice({
   name: 'object',
   initialState,
   reducers: {
-    updateUploadStatus: (state, action: PayloadAction<"PROGRESS" | "COMPLETED">) => {
-      return { ...state, status: action.payload }
-    },
-
     updatePath: (state, action: PayloadAction<{ path: string, parentId: string }>) => {
-      return { ...state, data: action.payload }
+      return { ...state, ...action.payload }
     },
 
-    updateFiles: (state, action: PayloadAction<IObjectFile[]>) => {
-      return { ...state, files: action.payload.length ? [...state.files, ...action.payload] : [] }
+    // Upload Methods 
+    updateUploadStatus: (state, action: PayloadAction<"PROGRESS" | "COMPLETED">) => {
+      return { ...state, upload: { ...state.upload, status: action.payload } }
     },
 
-    updateFileStatus: (state, action: PayloadAction<{ id: number | string, status: "INPROGRESS" | "COMPLETED" | "FAILDED" }>) => {
-      const data = state.files.map(file => {
+    updateUploadFiles: (state, action: PayloadAction<IObjectFile[]>) => {
+      return { ...state, upload: { ...state.upload, files: action.payload.length ? [...state.upload.files, ...action.payload] : [] } }
+    },
+
+    updateUploadFileStatus: (state, action: PayloadAction<{ id: number | string, status: "INPROGRESS" | "COMPLETED" | "FAILDED" }>) => {
+      const data = state.upload.files.map(file => {
         if (file.id === action.payload.id) {
           return { ...file, status: action.payload.status }
         }
         return file;
       })
-      return { ...state, files: data }
+      return { ...state, upload: { ...state.upload, files: data } }
+    },
+
+    // Export Methods 
+    updateExportFiles: (state, action: PayloadAction<string[]>) => {
+      return { ...state, export: { ...state.export, files: action.payload } }
     }
   },
 })
 
-export const { updateUploadStatus, updatePath, updateFiles, updateFileStatus } = objectSlice.actions;
+export const { updateUploadStatus, updatePath, updateUploadFiles, updateUploadFileStatus, updateExportFiles } = objectSlice.actions;
 
 export default objectSlice.reducer;

@@ -1,7 +1,5 @@
-import { ChangeEvent } from "react";
 import { useAddFolderMutation, useAddObjectMutation } from "../services"
-import { useAppDispatch } from "../redux";
-import { updateFileStatus, updateFiles } from "../redux/slices/objectSlice";
+import { useAppDispatch, updateUploadFileStatus, updateUploadFiles } from "../redux";
 import { IObjectFile, IUploadResponse } from "../interfaces";
 import HttpService from "../services/http";
 
@@ -22,10 +20,10 @@ const useObject = () => {
         }
     }
 
-    const addFiles = async (files: FileList | null) => {    
+    const addFiles = async (files: FileList | null) => {
         if (files && files.length) {
             const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: file.name.toLowerCase(), file, status: "INQUEUE" }))
-            dispatch(updateFiles(modifiedFiles));
+            dispatch(updateUploadFiles(modifiedFiles));
         }
     }
 
@@ -36,7 +34,7 @@ const useObject = () => {
             const uplaodedFile = await httpFormRequest<IUploadResponse>(form);
             return uplaodedFile;
         } catch (error) {
-            dispatch(updateFileStatus({ id, status: "FAILDED" }));
+            dispatch(updateUploadFileStatus({ id, status: "FAILDED" }));
             console.log({ error });
         }
     }
@@ -44,10 +42,10 @@ const useObject = () => {
     const addObject = async (id: number | string, payload: object) => {
         try {
             const object = await objectMutation(payload);
-            dispatch(updateFileStatus({ id, status: "COMPLETED" }));
+            dispatch(updateUploadFileStatus({ id, status: "COMPLETED" }));
             console.log({ object });
         } catch (error) {
-            dispatch(updateFileStatus({ id, status: "FAILDED" }));
+            dispatch(updateUploadFileStatus({ id, status: "FAILDED" }));
             console.log({ error });
         }
     }

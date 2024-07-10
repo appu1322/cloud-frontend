@@ -1,9 +1,6 @@
 import "./style.scss";
 import { useEffect, useState } from "react";
-import { Grid, IconButton, Tooltip, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import DownloadIcon from '@mui/icons-material/Download';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Grid } from '@mui/material';
 
 import { IObjectState } from "../../../interfaces";
 import { useObjectsQuery } from "../../../services";
@@ -14,7 +11,6 @@ import ContentHeader from '../../../components/content-header';
 const MyDrive = () => {
     const [state, setState] = useState<IObjectState>({
         data: [],
-        selected: [],
         shiftPressing: false,
         pagination: {
             page: 1,
@@ -45,46 +41,6 @@ const MyDrive = () => {
         }
     }, [data?.data]);
 
-    const onKeyUp = (e: KeyboardEvent) => {
-        if (e.repeat) {
-            return
-        }
-        setState(prev => ({ ...prev, shiftPressing: true }))
-    }
-
-    const onKeyDown = (e: KeyboardEvent) => {
-        if (e.repeat) {
-            return
-        }
-        setState(prev => ({ ...prev, shiftPressing: false }))
-    }
-
-    useEffect(() => {
-        window.addEventListener("keydown", onKeyUp);
-        window.addEventListener("keyup", onKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", onKeyUp);
-            window.removeEventListener("keyup", onKeyDown);
-        }
-    }, []);
-
-
-    const onSelect = (id: string | number) => {
-        let payload = state.selected;
-
-        if (payload.includes(id) && state.shiftPressing) {
-            payload = payload.filter(ele => ele !== id);
-            setState(prev => ({ ...prev, selected: payload }));
-        } else if (payload.includes(id)) {
-            setState(prev => ({ ...prev, selected: payload.length > 1 ? [id] : [] }));
-        } else if (state.shiftPressing) {
-            setState(prev => ({ ...prev, selected: [...state.selected, id] }));
-        } else {
-            setState(prev => ({ ...prev, selected: [id] }));
-        }
-    }
-
     const onScroll = () => {
         if (state.pagination.page !== state.pagination.totalPages) {
             setState(prev => ({
@@ -106,28 +62,6 @@ const MyDrive = () => {
                 onSelectViewMode={(mode) => console.log(mode)}
             />
 
-            <div className="file-actions">
-                {
-                    state.selected.length ?
-                        <div className="active">
-                            <IconButton onClick={() => setState(prev => ({ ...prev, selected: [] }))}><CloseIcon /></IconButton>
-                            <Typography variant="body2">{state.selected.length} Selected</Typography>
-                            <IconButton className="ml-3">
-                                <Tooltip title="Download">
-                                    <DownloadIcon />
-                                </Tooltip>
-                            </IconButton>
-                            <IconButton className="ml-1">
-                                <Tooltip title="Move to Trash">
-                                    <DeleteIcon />
-                                </Tooltip>
-                            </IconButton>
-                        </div>
-                        :
-                        <Typography variant="caption">No item selected!</Typography>
-                }
-            </div>
-
             <CustomDropzone height="calc(100% - 135px)" onScroll={onScroll}>
                 <Grid container spacing={2}>
                     {
@@ -137,9 +71,7 @@ const MyDrive = () => {
                                 id={ele._id}
                                 mimeType={ele.originalType}
                                 title={ele.originalName}
-                                active={state.selected.includes(ele._id)}
                                 previewUrl={ele.thumbnailPath}
-                                onClick={onSelect}
                             />
                         })
                     }

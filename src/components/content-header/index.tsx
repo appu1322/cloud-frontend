@@ -1,9 +1,16 @@
+import "./style.scss";
 import { FC, useState } from 'react';
-import { Box, Typography } from '@mui/material'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import { useAppDispatch, useAppSelector, updateExportFiles } from '../../redux';
+
 
 interface IProps {
     title: string 
@@ -12,6 +19,8 @@ interface IProps {
 }
 
 const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
+    const exportObject = useAppSelector(state => state.objectSlice.export);
+    const distach = useAppDispatch();
     const [alignment, setAlignment] = useState<string | null>(viewMode || 'grid');
 
     const handleAlignment = (
@@ -47,6 +56,28 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
                 </div>
             </Box>
+
+            <div className="file-actions">
+                {
+                    exportObject.files.length ?
+                        <div className="active">
+                            <IconButton onClick={() => distach(updateExportFiles([]))}><CloseIcon /></IconButton>
+                            <Typography variant="body2">{exportObject.files.length} Selected</Typography>
+                            <IconButton className="ml-3">
+                                <Tooltip title="Download">
+                                    <DownloadIcon />
+                                </Tooltip>
+                            </IconButton>
+                            <IconButton className="ml-1">
+                                <Tooltip title="Move to Trash">
+                                    <DeleteIcon />
+                                </Tooltip>
+                            </IconButton>
+                        </div>
+                        :
+                        <Typography variant="caption">No item selected!</Typography>
+                }
+            </div>
         </div>
     )
 }

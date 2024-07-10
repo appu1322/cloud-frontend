@@ -23,7 +23,6 @@ export interface IObject {
 
 export interface IObjectState {
     data: IObject[]
-    selected: Array<string | number>
     shiftPressing: boolean
     pagination: {
         totalPages: number
