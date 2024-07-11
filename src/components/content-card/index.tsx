@@ -1,6 +1,8 @@
 import "./style.scss"
 import { Grid } from '@mui/material'
 import { FC, useEffect, useState } from 'react';
+import LinearProgress from '@mui/material/LinearProgress';
+
 import pdfIcon from '../../assets/images/pdf.svg';
 import fileIcon from '../../assets/images/file.png';
 import imageIcon from '../../assets/images/image.svg';
@@ -13,10 +15,12 @@ interface IProps {
     mimeType: string
     title: string
     active?: boolean
-    previewUrl: string
+    previewUrl?: string
+    varient?: "NORMAL" | "UPLOAD"
 }
 
-const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl }) => {
+const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl, varient }) => {
+    const isUploading = varient=== "UPLOAD";
     const objects = useAppSelector(state => state.objectSlice.export);
     const dispatch = useAppDispatch();
     const [state, setState] = useState({
@@ -72,9 +76,10 @@ const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl }) => {
         }
     }
 
+
     return (
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} onClick={() => onSelect(id)} >
-            <div className='file-card' style={{ backgroundColor: objects.files.includes(id) ? "#d4e7ff" : undefined }}>
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} onClick={() => !isUploading && onSelect(id)} >
+            <div className='file-card' style={{ backgroundColor: objects.files.includes(id) ? "#d4e7ff" : undefined, opacity: isUploading ? "0.7" : undefined }}>
                 <div className="header">
                     <div className='mr-2 center'> <img width={14} src={getLogo(mimeType)} /> </div>
                     <div className="title">{title}</div>
@@ -89,6 +94,7 @@ const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl }) => {
                     }
                 </div>
             </div>
+            { isUploading && <LinearProgress />}
         </Grid>
     )
 }

@@ -11,8 +11,10 @@ import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles }
 import useObject from "../../hooks/useObject";
 import { formatMimetype } from "../../utilities/helper";
 import WarningDialog from "../mui/warning-dialog";
+import useScreenSize from "../../hooks/useScreenSize";
 
 const TrackUpload = () => {
+  const screenSize = useScreenSize();
   const [expand, setExpand] = useState(true);
   const [isClose, setIsClose] = useState(true);
   const [warning, setWarning] = useState(false);
@@ -21,6 +23,7 @@ const TrackUpload = () => {
   const objects = useAppSelector(state => state.objectSlice.upload);
   const dispatch = useAppDispatch();
   const completedObject = objects.files.filter(ele => ele.status === "COMPLETED");
+  
 
   const initiateUpload = async () => {
     for await (const object of objects.files) {
@@ -63,7 +66,7 @@ const TrackUpload = () => {
   }
 
   return (
-    <div className="custom-snakebar" style={{ display: isClose ? "none" : "initial" }}>
+    <div className="custom-snakebar" style={{ display: (isClose || screenSize.width < 768 ) ? "none" : "initial" }}>
       <div className="header">
         <Typography variant="body1">{completedObject.length} Upload Completed</Typography>
         <div>
