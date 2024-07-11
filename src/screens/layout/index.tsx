@@ -1,11 +1,12 @@
 import "./index.scss";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import SaveIcon from '@mui/icons-material/Save';
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import Navbar from "../../components/navbar";
-import { useEffect, useState } from "react";
 import useScreenSize from "../../hooks/useScreenSize";
 import InputFileUpload from "../../components/mui/file-upload";
 import TrackUpload from "../../components/track-upload";
@@ -35,7 +36,7 @@ const Layout = () => {
               <div className="sidebar">
                 <InputFileUpload multiple fullWidth />
 
-                <ListItemButton sx={{ borderRadius: "30px", marginTop:"20px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
+                <ListItemButton sx={{ borderRadius: "30px", marginTop: "20px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
@@ -47,11 +48,11 @@ const Layout = () => {
                   </ListItemIcon>
                   <ListItemText primary="Activity" />
                 </ListItemButton>
-                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "my-drive"} onClick={() => naviagte("/my-drive")}>
+                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "trash"} onClick={() => naviagte("/trash")}>
                   <ListItemIcon>
-                    <SaveIcon />
+                    <DeleteIcon />
                   </ListItemIcon>
-                  <ListItemText primary="My Drive" />
+                  <ListItemText primary="Trash" />
                 </ListItemButton>
               </div>
               <div className="content">
@@ -61,23 +62,32 @@ const Layout = () => {
             :
             <>
               <div className="mobile-sidebar" style={{ width: toggleSidebar ? "100%" : "0%" }}>
-                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "home"} onClick={() => naviagte("/home")}>
+                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "home"} onClick={() => {
+                  naviagte("/home");
+                  setToggleSidebar(false);
+                }}>
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
                   <ListItemText primary="Home" />
                 </ListItemButton>
-                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "activity"} onClick={() => naviagte("/activity")}>
+                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "activity"} onClick={() => {
+                  naviagte("/activity");
+                  setToggleSidebar(false);
+                }}>
                   <ListItemIcon>
                     <NotificationsNoneIcon />
                   </ListItemIcon>
                   <ListItemText primary="Activity" />
                 </ListItemButton>
-                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "my-drive"} onClick={() => naviagte("/my-drive")}>
+                <ListItemButton sx={{ borderRadius: "30px" }} selected={seletedMenu === "trash"} onClick={() => {
+                  naviagte("/trash");
+                  setToggleSidebar(false);
+                }}>
                   <ListItemIcon>
-                    <SaveIcon />
+                    <DeleteIcon />
                   </ListItemIcon>
-                  <ListItemText primary="My Drive" />
+                  <ListItemText primary="Trash" />
                 </ListItemButton>
               </div>
 

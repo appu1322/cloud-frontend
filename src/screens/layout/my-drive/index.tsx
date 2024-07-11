@@ -7,7 +7,6 @@ const MyDrive = () => {
     return (
         <div className="h-100">
             <ContentHeader
-                title='My Drive'
                 viewMode="grid"
                 onSelectViewMode={(mode) => console.log(mode)}
             />

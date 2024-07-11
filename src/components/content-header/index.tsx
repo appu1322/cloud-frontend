@@ -1,6 +1,7 @@
 import "./style.scss";
 import { FC, useState } from 'react';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import { useLocation } from "react-router-dom";
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -15,14 +16,15 @@ import HttpService from "../../services/http";
 
 
 interface IProps {
-    title: string
+    title?: string
     viewMode: "grid" | "list"
     onSelectViewMode: (viewMode: string) => void
 }
 
 const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
-    const [removeObjectMutation] = useRemoveObjectMutation();
+    const location = useLocation();
     const distach = useAppDispatch();
+    const [removeObjectMutation] = useRemoveObjectMutation();
     const { httpDownloadRequest } = HttpService();
     const exportObject = useAppSelector(state => state.objectSlice.export);
     const [alignment, setAlignment] = useState<string | null>(viewMode || 'grid');
@@ -64,10 +66,12 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
         }
     }
 
+    const urlTitle = location.pathname.split("/")[1];
+
     return (
         <div>
             <Box className='center' justifyContent="space-between" paddingTop="20px">
-                <Typography fontWeight="600" textTransform="uppercase" variant="h6">{title}</Typography>
+                <Typography fontWeight="600" textTransform="uppercase" variant="h6" sx={{ textTransform: "capitalize" }}>{title ?? urlTitle}</Typography>
 
                 <div className="action">
                     <ToggleButtonGroup

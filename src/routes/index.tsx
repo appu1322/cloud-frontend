@@ -35,7 +35,7 @@ export default createBrowserRouter([
                         errorElement: <PageNotFound />
                     },
                     {
-                        path: "my-drive",
+                        path: "trash",
                         element: <MyDrive />,
                         errorElement: <PageNotFound />
                     },
