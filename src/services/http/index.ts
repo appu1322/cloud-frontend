@@ -78,7 +78,42 @@ const HttpService = () => {
                 });
         });
 
-    return { httpRequest, httpFormRequest };
+    const httpDownloadRequest = <T>(
+        method: "GET" | "POST" | "PUT" | "DELETE" | "OPTION",
+        url: string,
+        data = {},
+        params = {},
+    ) => new Promise<T>((resolve, reject) => {
+        setIsLoading(() => true);
+        axios({
+            method,
+            url: `${BASE_URL}/${url}`,
+            data,
+            params,
+            headers: HEADERS,
+            responseType: "blob",
+            onDownloadProgress: (progressEvent) => {
+                if (progressEvent.total) {
+                    const progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
+                    console.log("Download: ", { progress });
+                }
+            },
+        })
+            .then((response) => {
+                setIsLoading(() => false);
+                resolve(response.data);
+            })
+            .catch((err) => {
+                const error = err as AxiosError;
+                setIsLoading(() => false);
+                if (error.response?.status === 401) {
+                    localStorage.removeItem("currentUserToken");
+                }
+                reject(err.response);
+            });
+    });
+
+    return { httpRequest, httpFormRequest, httpDownloadRequest };
 };
 
 export default HttpService;

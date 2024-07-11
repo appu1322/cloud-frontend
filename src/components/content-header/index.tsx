@@ -10,17 +10,19 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useAppDispatch, useAppSelector, updateExportFiles } from '../../redux';
+import HttpService from "../../services/http";
 
 
 interface IProps {
-    title: string 
+    title: string
     viewMode: "grid" | "list"
     onSelectViewMode: (viewMode: string) => void
 }
 
 const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
-    const exportObject = useAppSelector(state => state.objectSlice.export);
     const distach = useAppDispatch();
+    const { httpDownloadRequest } = HttpService();
+    const exportObject = useAppSelector(state => state.objectSlice.export);
     const [alignment, setAlignment] = useState<string | null>(viewMode || 'grid');
 
     const handleAlignment = (
@@ -30,8 +32,26 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
         if (newAlignment !== null) {
             setAlignment(newAlignment);
             onSelectViewMode(newAlignment)
-          }
+        }
     };
+
+    const onDownload = async () => {
+        try {
+            const data = await httpDownloadRequest<string>("GET", "object/export", {}, {
+                objectsIds: exportObject.files
+            });
+
+            const url = window.URL.createObjectURL(new Blob([data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'files.zip');
+            document.body.appendChild(link);
+            link.click();
+
+        } catch (error) {
+            console.log({ error });
+        }
+    }
 
     return (
         <div>
@@ -63,7 +83,7 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
                         <div className="active">
                             <IconButton onClick={() => distach(updateExportFiles([]))}><CloseIcon /></IconButton>
                             <Typography variant="body2">{exportObject.files.length} Selected</Typography>
-                            <IconButton className="ml-3">
+                            <IconButton className="ml-3" onClick={onDownload}>
                                 <Tooltip title="Download">
                                     <DownloadIcon />
                                 </Tooltip>
