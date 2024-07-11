@@ -22,7 +22,7 @@ const useObject = () => {
 
     const addFiles = async (files: FileList | null) => {
         if (files && files.length) {
-            const modifiedFiles: IObjectFile[] = Array.from(files).map((file, i) => ({ id: file.name.toLowerCase(), file, status: "INQUEUE" }))
+            const modifiedFiles: IObjectFile[] = Array.from(files).map((file) => ({ id: file.name.toLowerCase(), file, status: "INQUEUE" }))
             dispatch(updateUploadFiles(modifiedFiles));
         }
     }
@@ -41,9 +41,8 @@ const useObject = () => {
 
     const addObject = async (id: number | string, payload: object) => {
         try {
-            const object = await objectMutation(payload);
+            await objectMutation(payload);
             dispatch(updateUploadFileStatus({ id, status: "COMPLETED" }));
-            console.log({ object });
         } catch (error) {
             dispatch(updateUploadFileStatus({ id, status: "FAILDED" }));
             console.log({ error });
