@@ -28,6 +28,15 @@ export const objectService = createApi({
             invalidatesTags: ["addFile"]
         }),
 
+        removeObject: builder.mutation<IObjectResponse, object>({
+            query: (payload) => ({
+                url: OBJECT,
+                method: "DELETE",
+                body: payload
+            }),
+            invalidatesTags: ["addFile"]
+        }),
+
         object: builder.query<IObjectResponse, object>({
             query: (search) => ({
                 url: OBJECT,
@@ -47,4 +56,4 @@ export const objectService = createApi({
     }),
 });
 
-export const { useObjectQuery, useObjectsQuery, useAddObjectMutation, useAddFolderMutation } = objectService;
+export const { useObjectQuery, useObjectsQuery, useAddObjectMutation, useAddFolderMutation, useRemoveObjectMutation } = objectService;

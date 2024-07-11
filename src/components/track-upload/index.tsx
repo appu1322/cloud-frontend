@@ -1,6 +1,6 @@
 import "./style.scss";
 import { useEffect, useState } from "react";
-import { CircularProgress, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -23,7 +23,7 @@ const TrackUpload = () => {
   const objects = useAppSelector(state => state.objectSlice.upload);
   const dispatch = useAppDispatch();
   const completedObject = objects.files.filter(ele => ele.status === "COMPLETED");
-  
+
 
   const initiateUpload = async () => {
     for await (const object of objects.files) {
@@ -37,7 +37,7 @@ const TrackUpload = () => {
             parentId: objectDetail.parentId,
             extension: formatMimetype(object.file.type),
             originalPath: uploadedObject.data.originalPath,
-            thumbnailPath: uploadedObject.data.thumbnailPath,
+            thumbnailPath: uploadedObject.data.thumbnailPath
           }
           await addObject(object.id, payload);
         }
@@ -57,7 +57,7 @@ const TrackUpload = () => {
   }, [objects.files, objects.status]);
 
   const onclose = () => {
-    if( objects.status === "PROGRESS" && objects.files.length !== completedObject.length ) {
+    if (objects.status === "PROGRESS" && objects.files.length !== completedObject.length) {
       setWarning(true);
     } else {
       setIsClose(true);
@@ -66,7 +66,7 @@ const TrackUpload = () => {
   }
 
   return (
-    <div className="custom-snakebar" style={{ display: (isClose || screenSize.width < 768 ) ? "none" : "initial" }}>
+    <div className="custom-snakebar" style={{ display: (isClose || screenSize.width < 768) ? "none" : "initial" }}>
       <div className="header">
         <Typography variant="body1">{completedObject.length} Upload Completed</Typography>
         <div>
@@ -99,7 +99,7 @@ const TrackUpload = () => {
 
       </div>
 
-      <WarningDialog 
+      <WarningDialog
         isOpen={warning}
         onClose={() => setWarning(false)}
         onConfirm={() => setWarning(false)}

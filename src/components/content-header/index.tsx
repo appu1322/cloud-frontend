@@ -10,6 +10,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useAppDispatch, useAppSelector, updateExportFiles } from '../../redux';
+import { useRemoveObjectMutation } from "../../services";
 import HttpService from "../../services/http";
 
 
@@ -20,6 +21,7 @@ interface IProps {
 }
 
 const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
+    const [removeObjectMutation] = useRemoveObjectMutation();
     const distach = useAppDispatch();
     const { httpDownloadRequest } = HttpService();
     const exportObject = useAppSelector(state => state.objectSlice.export);
@@ -50,6 +52,15 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
         } catch (error) {
             console.log({ error });
+        }
+    }
+
+    const onRemove = async () => {
+        try {
+            await removeObjectMutation({ _ids: exportObject.files });
+            distach(updateExportFiles([]));
+        } catch (error) {
+            console.log("Error on removing objects: ", { error });
         }
     }
 
@@ -88,7 +99,7 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
                                     <DownloadIcon />
                                 </Tooltip>
                             </IconButton>
-                            <IconButton className="ml-1">
+                            <IconButton className="ml-1" onClick={onRemove}>
                                 <Tooltip title="Move to Trash">
                                     <DeleteIcon />
                                 </Tooltip>
