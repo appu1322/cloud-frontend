@@ -4,15 +4,16 @@ import { IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import imageIcon from '../../assets/images/image.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles, updateExportFile } from "../../redux";
-import useObject from "../../hooks/useObject";
+
 import { formatMimetype } from "../../utilities/helper";
+import { useLazyExportProgressQuery } from "../../services";
+import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles, updateExportFile, updateExportFiles } from "../../redux";
+import imageIcon from '../../assets/images/image.svg';
+import useObject from "../../hooks/useObject";
 import WarningDialog from "../mui/warning-dialog";
 import useScreenSize from "../../hooks/useScreenSize";
-import { useLazyExportProgressQuery } from "../../services";
 
 const TrackUpload = () => {
   const dispatch = useAppDispatch();
@@ -25,9 +26,9 @@ const TrackUpload = () => {
   const objectDetail = useAppSelector(state => state.objectSlice);
   const uploadObject = useAppSelector(state => state.objectSlice.upload);
   const exportObject = useAppSelector(state => state.objectSlice.export);
-  const [getExportProgress, { data }] = useLazyExportProgressQuery({ pollingInterval: exportProgressTraking ? 3000 : 0 });
-  const completedObject = uploadObject.files.filter(ele => ele.status === "COMPLETED");
-
+  const [getExportProgress, { data: exportProgressData }] = useLazyExportProgressQuery({ pollingInterval: exportProgressTraking ? 3000 : 0 });
+  const uploadCompleted = uploadObject.files.filter(ele => ele.status === "COMPLETED");
+  const exportCompleted = exportObject.filter(ele => ele.status === "COMPLETED");
 
   const initiateUpload = async () => {
     for await (const object of uploadObject.files) {
@@ -53,7 +54,7 @@ const TrackUpload = () => {
 
   useEffect(() => {
     const totalFiles = uploadObject.files.length;
-    if (totalFiles && totalFiles !== completedObject.length && uploadObject.status !== "PROGRESS") {
+    if (totalFiles && totalFiles !== uploadCompleted.length && uploadObject.status !== "PROGRESS") {
       setIsClose(false);
       dispatch(updateUploadStatus("PROGRESS"));
       initiateUpload();
@@ -72,28 +73,33 @@ const TrackUpload = () => {
   }, [exportObject]);
 
   useEffect(() => {
-    if (data && data.data) {
-      data.data.forEach(ele => {
+    if (exportProgressData && exportProgressData.data) {
+      exportProgressData.data.forEach(ele => {
         dispatch(updateExportFile(ele));
       });
     }
-  }, [data]);
+  }, [exportProgressData]);
 
   const onclose = () => {
-    const uploadInProgress = uploadObject.status === "PROGRESS" && uploadObject.files.length !== completedObject.length;
+    const uploadInProgress = uploadObject.status === "PROGRESS" && uploadObject.files.length !== uploadCompleted.length;
 
     if (uploadInProgress || exportProgressTraking) {
       setWarning(true);
     } else {
       setIsClose(true);
       dispatch(updateUploadFiles([]));
+      dispatch(updateExportFiles([]));
     }
   }
 
   return (
     <div className="custom-snakebar" style={{ display: (isClose || screenSize.width < 768) ? "none" : "initial" }}>
       <div className="header">
-        <Typography variant="body1">{completedObject.length} Upload Completed</Typography>
+        <Typography variant="body1">
+          {uploadCompleted.length ? uploadCompleted.length + " Uploaded" : null}
+          {(uploadCompleted.length && exportCompleted.length) ? " & " : null}
+          {exportCompleted.length ? exportCompleted.length + " Downloaded " : null}
+        </Typography>
         <div>
           <IconButton onClick={() => setExpand(!expand)}>
             {expand ? <ExpandMoreIcon /> : <ExpandLessIcon />}
@@ -105,6 +111,7 @@ const TrackUpload = () => {
       </div>
 
       <div className="body" style={{ maxHeight: expand ? "350px" : "0px" }}>
+        {exportObject.length ? <Typography variant="caption" className="ml-2" >Download</Typography> : null}
         {
           exportObject.map((file, i) => {
             return <div className="content-wrapper" key={i}>
@@ -121,6 +128,8 @@ const TrackUpload = () => {
             </div>
           })
         }
+
+        {uploadObject.files.length ? <Typography variant="caption" className="ml-2" >Upload</Typography> : null}
         {
           uploadObject.files.map((file, i) => {
             return <div className="content-wrapper" key={i}>
