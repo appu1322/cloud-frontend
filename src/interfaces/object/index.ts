@@ -57,3 +57,25 @@ export interface IUploadResponse extends IResponse {
         size: number;
     };
 }
+
+export interface IExportResponse extends IResponse {
+    data: {
+        _id: string;
+        name: string,
+        totalFiles: Number,
+        success: Array<string>,
+        failed: Array<string>,
+        status: 'INQUEUE' | 'INITIATED' | 'COMPLETED' | 'EXPIRED';
+    };
+}
+
+export interface IExportResponses extends IResponse {
+    data: Array<{
+        _id: string;
+        name: string,
+        totalFiles: Number,
+        success: Array<string>,
+        failed: Array<string>,
+        status: 'INQUEUE' | 'INITIATED' | 'COMPLETED' | 'EXPIRED';
+    }>;
+}

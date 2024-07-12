@@ -8,7 +8,7 @@ import fileIcon from '../../assets/images/file.png';
 import imageIcon from '../../assets/images/image.svg';
 import videIcon from '../../assets/images/video.svg';
 import { formatMimetype } from "../../utilities/helper";
-import { useAppDispatch, useAppSelector, updateExportFiles } from "../../redux";
+import { useAppDispatch, useAppSelector, updateSelectedFiles } from "../../redux";
 
 interface IProps {
     id: string
@@ -21,7 +21,7 @@ interface IProps {
 
 const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl, varient }) => {
     const isUploading = varient=== "UPLOAD";
-    const objects = useAppSelector(state => state.objectSlice.export);
+    const selectedFiles = useAppSelector(state => state.objectSlice.selectedFiles);
     const dispatch = useAppDispatch();
     const [state, setState] = useState({
         shiftPressing: false,
@@ -52,17 +52,15 @@ const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl, varient }) =
     }, []);
 
     const onSelect = (id: string) => {
-        let selectedFiles = objects.files;
-
         if (selectedFiles.includes(id) && state.shiftPressing) {
-            selectedFiles = selectedFiles.filter(ele => ele !== id);
-            dispatch(updateExportFiles(selectedFiles));
+            const files = selectedFiles.filter(ele => ele !== id);
+            dispatch(updateSelectedFiles(files));
         } else if (selectedFiles.includes(id)) {
-            dispatch(updateExportFiles(selectedFiles.length > 1 ? [id] : []));
+            dispatch(updateSelectedFiles(selectedFiles.length > 1 ? [id] : []));
         } else if (state.shiftPressing) {
-            dispatch(updateExportFiles([...selectedFiles, id]));
+            dispatch(updateSelectedFiles([...selectedFiles, id]));
         } else {
-            dispatch(updateExportFiles([id]));
+            dispatch(updateSelectedFiles([id]));
         }
     }
 
@@ -79,7 +77,7 @@ const ContentCard: FC<IProps> = ({ id, mimeType, title, previewUrl, varient }) =
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2} onClick={() => !isUploading && onSelect(id)} >
-            <div className='file-card' style={{ backgroundColor: objects.files.includes(id) ? "#d4e7ff" : undefined, opacity: isUploading ? "0.7" : undefined }}>
+            <div className='file-card' style={{ backgroundColor: selectedFiles.includes(id) ? "#d4e7ff" : undefined, opacity: isUploading ? "0.7" : undefined }}>
                 <div className="header">
                     <div className='mr-2 center'> <img width={14} src={getLogo(mimeType)} /> </div>
                     <div className="title">{title}</div>

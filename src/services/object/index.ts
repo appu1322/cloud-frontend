@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { BASE_URL, HEADERS, OBJECT } from '../endpoints';
-import { IObjectResponse, IObjectsResponse } from '../../interfaces';
+import { IExportResponse, IExportResponses, IObjectResponse, IObjectsResponse } from '../../interfaces';
 
 export const objectService = createApi({
     reducerPath: 'objobjectSctService',
@@ -45,6 +45,22 @@ export const objectService = createApi({
             })
         }),
 
+        export: builder.mutation<IExportResponse, object>({
+            query: (payload) => ({
+                url: OBJECT + "/export",
+                method: "POST",
+                body: payload
+            })
+        }),
+
+        exportProgress: builder.query<IExportResponses, object>({
+            query: (search) => ({
+                url: OBJECT + "/export-progress",
+                method: "GET",
+                params: search
+            })
+        }),
+
         objects: builder.query<IObjectsResponse, object>({
             query: (search) => ({
                 url: OBJECT + "/list",
@@ -56,4 +72,12 @@ export const objectService = createApi({
     }),
 });
 
-export const { useObjectQuery, useObjectsQuery, useAddObjectMutation, useAddFolderMutation, useRemoveObjectMutation } = objectService;
+export const {
+    useObjectQuery,
+    useObjectsQuery,
+    useLazyExportProgressQuery,
+    useAddObjectMutation,
+    useAddFolderMutation,
+    useRemoveObjectMutation,
+    useExportMutation
+} = objectService;

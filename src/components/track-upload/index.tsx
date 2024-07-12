@@ -7,26 +7,30 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import imageIcon from '../../assets/images/image.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles } from "../../redux";
+import { useAppDispatch, useAppSelector, updateUploadStatus, updateUploadFiles, updateExportFile } from "../../redux";
 import useObject from "../../hooks/useObject";
 import { formatMimetype } from "../../utilities/helper";
 import WarningDialog from "../mui/warning-dialog";
 import useScreenSize from "../../hooks/useScreenSize";
+import { useLazyExportProgressQuery } from "../../services";
 
 const TrackUpload = () => {
+  const dispatch = useAppDispatch();
   const screenSize = useScreenSize();
+  const { upload, addObject } = useObject();
   const [expand, setExpand] = useState(true);
   const [isClose, setIsClose] = useState(true);
   const [warning, setWarning] = useState(false);
-  const { upload, addObject } = useObject();
+  const [exportProgressTraking, setExportProgressTraking] = useState(false);
   const objectDetail = useAppSelector(state => state.objectSlice);
-  const objects = useAppSelector(state => state.objectSlice.upload);
-  const dispatch = useAppDispatch();
-  const completedObject = objects.files.filter(ele => ele.status === "COMPLETED");
+  const uploadObject = useAppSelector(state => state.objectSlice.upload);
+  const exportObject = useAppSelector(state => state.objectSlice.export);
+  const [getExportProgress, { data }] = useLazyExportProgressQuery({ pollingInterval: exportProgressTraking ? 3000 : 0 });
+  const completedObject = uploadObject.files.filter(ele => ele.status === "COMPLETED");
 
 
   const initiateUpload = async () => {
-    for await (const object of objects.files) {
+    for await (const object of uploadObject.files) {
       if (object.status === "INQUEUE") {
         const uploadedObject = await upload(object.id, object.file);
         if (uploadedObject) {
@@ -48,16 +52,37 @@ const TrackUpload = () => {
   }
 
   useEffect(() => {
-    const totalFiles = objects.files.length;
-    if (totalFiles && totalFiles !== completedObject.length && objects.status !== "PROGRESS") {
+    const totalFiles = uploadObject.files.length;
+    if (totalFiles && totalFiles !== completedObject.length && uploadObject.status !== "PROGRESS") {
       setIsClose(false);
       dispatch(updateUploadStatus("PROGRESS"));
       initiateUpload();
     }
-  }, [objects.files, objects.status]);
+  }, [uploadObject.files, uploadObject.status]);
+
+  useEffect(() => {
+    const exportIds = exportObject.filter(ele => ele.status === "INITIATED").map(ele => ele._id);
+    if (exportObject.length && exportIds && !exportProgressTraking) {
+      setIsClose(false);
+      setExportProgressTraking(true);
+      getExportProgress({ _ids: exportIds });
+    } else {
+      setExportProgressTraking(false);
+    }
+  }, [exportObject]);
+
+  useEffect(() => {
+    if (data && data.data) {
+      data.data.forEach(ele => {
+        dispatch(updateExportFile(ele));
+      });
+    }
+  }, [data]);
 
   const onclose = () => {
-    if (objects.status === "PROGRESS" && objects.files.length !== completedObject.length) {
+    const uploadInProgress = uploadObject.status === "PROGRESS" && uploadObject.files.length !== completedObject.length;
+
+    if (uploadInProgress || exportProgressTraking) {
       setWarning(true);
     } else {
       setIsClose(true);
@@ -81,7 +106,23 @@ const TrackUpload = () => {
 
       <div className="body" style={{ maxHeight: expand ? "350px" : "0px" }}>
         {
-          objects.files.map((file, i) => {
+          exportObject.map((file, i) => {
+            return <div className="content-wrapper" key={i}>
+              <div className="center">
+                <img src={imageIcon} width="20px" />
+                <div className="ml-2 title">{file.name}</div>
+              </div>
+              {
+                file.status === "COMPLETED" ?
+                  <CheckCircleIcon color="success" />
+                  :
+                  <HourglassBottomIcon color="warning" />
+              }
+            </div>
+          })
+        }
+        {
+          uploadObject.files.map((file, i) => {
             return <div className="content-wrapper" key={i}>
               <div className="center">
                 <img src={imageIcon} width="20px" />

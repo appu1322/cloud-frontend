@@ -10,10 +10,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { useAppDispatch, useAppSelector, updateExportFiles } from '../../redux';
-import { useRemoveObjectMutation } from "../../services";
-import HttpService from "../../services/http";
-
+import { useAppDispatch, useAppSelector, updateSelectedFiles, updateExportFiles } from '../../redux';
+import { useExportMutation, useRemoveObjectMutation } from "../../services";
 
 interface IProps {
     title?: string
@@ -24,9 +22,9 @@ interface IProps {
 const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
     const location = useLocation();
     const distach = useAppDispatch();
+    const [exportMutation] = useExportMutation();
     const [removeObjectMutation] = useRemoveObjectMutation();
-    const { httpDownloadRequest } = HttpService();
-    const exportObject = useAppSelector(state => state.objectSlice.export);
+    const selectedFiles = useAppSelector(state => state.objectSlice.selectedFiles);
     const [alignment, setAlignment] = useState<string | null>(viewMode || 'grid');
 
     const handleAlignment = (
@@ -41,16 +39,16 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
     const onDownload = async () => {
         try {
-            const data = await httpDownloadRequest<string>("GET", "object/export", {}, {
-                objectsIds: exportObject.files
-            });
-
-            const url = window.URL.createObjectURL(new Blob([data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'files.zip');
-            document.body.appendChild(link);
-            link.click();
+            const res = await exportMutation({ objectsIds: selectedFiles });
+            if (res.data?.data) {
+                distach(updateExportFiles([res.data.data]));
+            }
+            // const url = window.URL.createObjectURL(new Blob([data]));
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', 'files.zip');
+            // document.body.appendChild(link);
+            // link.click();
 
         } catch (error) {
             console.log({ error });
@@ -59,8 +57,8 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
     const onRemove = async () => {
         try {
-            await removeObjectMutation({ _ids: exportObject.files });
-            distach(updateExportFiles([]));
+            await removeObjectMutation({ _ids: selectedFiles });
+            distach(updateSelectedFiles([]));
         } catch (error) {
             console.log("Error on removing objects: ", { error });
         }
@@ -94,10 +92,10 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
             <div className="file-actions">
                 {
-                    exportObject.files.length ?
+                    selectedFiles.length ?
                         <div className="active">
-                            <IconButton onClick={() => distach(updateExportFiles([]))}><CloseIcon /></IconButton>
-                            <Typography variant="body2">{exportObject.files.length} Selected</Typography>
+                            <IconButton onClick={() => distach(updateSelectedFiles([]))}><CloseIcon /></IconButton>
+                            <Typography variant="body2">{selectedFiles.length} Selected</Typography>
                             <IconButton className="ml-3" onClick={onDownload}>
                                 <Tooltip title="Download">
                                     <DownloadIcon />
