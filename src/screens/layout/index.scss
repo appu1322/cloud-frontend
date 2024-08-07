@@ -11,6 +11,10 @@
         }
     }
 
+    .sidebar-mobile {
+        width: 100%;
+    }
+
     .content {
         width: calc(100% - 250px);
         height: 100%;
@@ -18,4 +22,22 @@
         border-radius: 25px 0px 0px 0px;
         background-color: #fff;
     }
+}
+
+.mobile-sidebar {
+    height: calc(100vh - 66px); 
+    width: 0%;
+    transition: all 0.5s;
+    overflow: hidden;
+}
+
+.mobile-layout {
+    height: calc(100vh - 66px); 
+    padding: 0px 16px;
+    border-radius: 25px 0px 0px 0px;
+    background-color: #fff;
+    width: 100%;
+    transition: all 0.5s;
+    border-radius: 0px;
+    overflow: hidden;
 }

@@ -1,0 +1,38 @@
+.custom-snakebar {
+    position: absolute;
+    right: 40px;
+    bottom: 0;
+    z-index: 2;
+    width: 360px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+
+    .header {
+        padding: 8px 20px;
+        background-color: #f3f3f3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    .body {
+        height: 360px;
+        transition: all 0.2s;
+        overflow: auto;
+        background-color: #fff;
+
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+
+            .title {
+                white-space: nowrap;
+                overflow: hidden;
+                width: 230px;
+            }
+        }
+    }
+}

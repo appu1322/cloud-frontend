@@ -24,4 +24,14 @@ export const capitalize = (text: string) => {
     return name;
 };
 
+export const formatMimetype = (mime: string) => {
+    const name = mime.split("/")[0];
+    switch (name) {
+        case "image": return "images"
+        case "video": return "videos"
+        case "audio": return "audios"
+        default: return "documents"
+    }
+}
+
 // export const createIndex = (pagination: IPagination, index: number) => pagination?.limit * (pagination?.page - 1) + index + 1;

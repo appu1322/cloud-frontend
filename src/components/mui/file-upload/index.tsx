@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
+import { ChangeEvent, FC, useState } from 'react';
+import { Box, Menu, MenuItem } from '@mui/material';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { ChangeEvent, FC } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import useObject from '../../../hooks/useObject';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -16,22 +18,71 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 type props = {
+    fullWidth?: boolean
     multiple?: boolean
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-const InputFileUpload: FC<props> = ({ multiple, onChange }) => {
+const InputFileUpload: FC<props> = ({ fullWidth, multiple }) => {
+    const { addFiles } = useObject();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
-        <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-        >
-            Upload file
-            <VisuallyHiddenInput type="file" multiple={multiple} onChange={onChange} />
-        </Button>
+        <>
+            <div>
+                <Button
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                    startIcon={<AddIcon />}
+                    fullWidth={fullWidth}
+                >
+                    New
+                </Button>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    <MenuItem onClick={handleClose}>
+                        <Box
+                            component="label"
+                            role={undefined}
+                            tabIndex={-1}
+                            sx={{ cursor: "pointer" }}
+                        >
+                            New Folder
+                        </Box>
+                    </MenuItem>
+                    <MenuItem>
+                        <Box
+                            component="label"
+                            role={undefined}
+                            tabIndex={-1}
+                            sx={{ cursor: "pointer" }}
+                        >
+                            Upload file
+                            <VisuallyHiddenInput type="file" multiple={multiple} onChange={(e) => {
+                                addFiles(e.target.files);
+                                handleClose();
+                            }} />
+                        </Box>
+                    </MenuItem>
+                </Menu>
+            </div>
+        </>
     );
 }
 

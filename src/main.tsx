@@ -8,6 +8,8 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WifiOffIcon from "@mui/icons-material/WifiOff";
 import { SnackbarProvider } from "notistack";
 import { LoadingProvider } from './hooks/useLoader.tsx';
+import { store } from './redux/store';
+import { Provider as ReduxProvider } from 'react-redux'
 import {
   QueryClient,
   QueryClientProvider,
@@ -27,22 +29,24 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <LoadingProvider>
-      <QueryClientProvider client={queryClient}>
-        <SnackbarProvider
-          preventDuplicate
-          maxSnack={3}
-          iconVariant={{
-            success: <ErrorOutlineIcon />,
-            error: <ErrorOutlineIcon />,
-            warning: <WarningAmberIcon />,
-            info: <TaskAltIcon />,
-            default: <WifiOffIcon />
-          }}
-        >
-          <App />
-        </SnackbarProvider>
-      </QueryClientProvider>
-    </LoadingProvider>
+    <ReduxProvider store={store}>
+      <LoadingProvider>
+        <QueryClientProvider client={queryClient}>
+          <SnackbarProvider
+            preventDuplicate
+            maxSnack={3}
+            iconVariant={{
+              success: <ErrorOutlineIcon />,
+              error: <ErrorOutlineIcon />,
+              warning: <WarningAmberIcon />,
+              info: <TaskAltIcon />,
+              default: <WifiOffIcon />
+            }}
+          >
+            <App />
+          </SnackbarProvider>
+        </QueryClientProvider>
+      </LoadingProvider>
+    </ReduxProvider>
   </React.StrictMode>,
 )
